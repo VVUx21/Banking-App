@@ -9,6 +9,9 @@ import React from 'react'
 
 const Sidebar = ({user}:SiderbarProps) => {
     const Pathname = usePathname();
+    const loggedIn={
+        firstName:'Vibhuu',lastName:'Behera',email:'vvunitian18@gmail.com'
+      }
   return (
     <section className='sidebar'>
        <nav className='sidebar-profile flex flex-col gap-4'>
@@ -30,6 +33,15 @@ const Sidebar = ({user}:SiderbarProps) => {
                 })
             }
        </nav>
+       <footer className='footer border-t-2 h-fit'>
+            <div className="footer_image">
+                <span className=' text-slate-700 footer_name'>{loggedIn.firstName[0]}</span>
+            </div>
+            <div className="flex flex-col justify-center mt-2 ml-6 ">
+                <p className=' text-slate-700 text-16'>{loggedIn.firstName} {loggedIn.lastName}</p>
+                <p className='text-slate-700 footer_email text-14 '>{loggedIn.email}</p>
+            </div>
+       </footer>
     </section>
   )
 }
