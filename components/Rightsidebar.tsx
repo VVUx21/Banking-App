@@ -50,19 +50,19 @@ const Rightsidebar = ({user,transactions,banks}:RightSidebarProps) => {
                 <h2 className='header-2'>My budgets</h2>
                 <Category name="Subscriptions" 
                     icon="/icons/monitor.svg"
-                    count={70}
+                    count={0}
                     bgcolor="bg-bankGradient/10"
                     progressbar="bg-bankGradient"
                 />
                 <Category name="Food and booze" 
                     icon="/icons/shopping-bag.svg"
-                    count={90}
+                    count={70}
                     bgcolor="bg-red-900/10"
                     progressbar="bg-red-300"
                 />
                 <Category name="Savings" 
                     icon="/icons/coins.svg"
-                    count={30}
+                    count={70}
                     bgcolor="bg-green-900/10"
                     progressbar="bg-green-300"
                 />

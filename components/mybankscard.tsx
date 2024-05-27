@@ -23,7 +23,9 @@ const Mybankscard = () => {
                 <span>Spending this month</span>
                 <span>&#36;2,840.80</span>
             </div>
-            <Progress value={progress} className="w-[60%] bg-bankGradient h-2"/>
+            <div className="progressbar max-w-full h-2 bg-slate-800/10 rounded-md">
+                <Progress value={progress} className="w-[60%] bg-bankGradient h-2"/>
+            </div>
         </div>
   )
 }

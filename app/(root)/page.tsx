@@ -1,4 +1,5 @@
 import Headerbox from '@/components/headerbox'
+import Recenttransactions from '@/components/recenttransactions'
 import Rightsidebar from '@/components/Rightsidebar'
 import Totalbalance from '@/components/totalbalance'
 import React from 'react'
@@ -14,8 +15,12 @@ const Home = () => {
             <Headerbox title="Welcome" type="greeting" subtext="Access and manage ur account and transactions efficiently" user="Vibhuu"
             />
             <Totalbalance accounts={[]} totalBanks={1} totalCurrentBalance={2918.32} />
+
+            <Recenttransactions/>
+            
           </header>
        </div>
+
        <Rightsidebar
           banks={[{},{}]}
           transactions={[]}

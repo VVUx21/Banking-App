@@ -17,8 +17,8 @@ export const Category = ({icon,name,count,bgcolor,progressbar}) => {
           <h3 className={cn("font-normal")}>{count}&#36; left</h3>
         </div>
         <Progress
-          value={(count / 100) * 100}
-          className={`h-2 w-[${count}%] ${progressbar}`}
+          value={count}
+          className={`h-2 w-[${(count-10)}%] ${progressbar}`}
         />
       </div>
     </div>
