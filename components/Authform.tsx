@@ -11,30 +11,34 @@ import {
   Form,
 } from "@/components/ui/form"
 import Inputform from './inputform'
-
-const formSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8,{
-        message: "Password must be at least 8 characters.",
-      }),
-  })  
+import {authFormSchema} from '@/lib/utils'
+import { signup } from '@/lib/server/users.actions'
 
 const Authform = ({type}:{type:string}) => {
     const [user,setUser] = useState(null);
+    const formSchema = authFormSchema(type);
+
     // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email:"",
-      password:"",
-    },
-  })
- 
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        email: "",
+        password: ''
+      },
+    })
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)}
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      if (type === 'sign-up') {
+        console.log(values);
+        const newUser= await signup(values);
+        setUser(newUser);
+      } 
+    } catch (error) {
+      console.error('Error', error);
+    }
+    //console.log(values)
+  }
   return (
    <section className='auth-form'>
         <header className='flex flex-col gap-5 md:gap-8'>
@@ -56,24 +60,24 @@ const Authform = ({type}:{type:string}) => {
         {type === 'sign-up' && (
                 <>
                   <div className="flex gap-4">
-                    <Inputform form={form} name='firstName' label="First Name" placeholder='Enter your first name' />
-                    <Inputform form={form } name='lastName' label="Last Name" placeholder='Enter your first name' />
+                    <Inputform form={form.control} name='firstName' label="First Name" placeholder='Enter your first name' />
+                    <Inputform form={form.control} name='lastName' label="Last Name" placeholder='Enter your last name' />
                   </div>
-                  <Inputform form={form } name='address1' label="Address" placeholder='Enter your specific address' />
-                  <Inputform form={form } name='city' label="City" placeholder='Enter your city' />
+                  <Inputform form={form.control} name='address1' label="Address" placeholder='Enter your specific address' />
+                  <Inputform form={form.control} name='city' label="City" placeholder='Enter your city' />
                   <div className="flex gap-4">
-                    <Inputform form={form } name='state' label="State" placeholder='Example: NY' />
-                    <Inputform form={form } name='postalCode' label="Postal Code" placeholder='Example: 11101' />
+                    <Inputform form={form.control} name='state' label="State" placeholder='Example: NY' />
+                    <Inputform form={form.control} name='postalCode' label="Postal Code" placeholder='Example: 11101' />
                   </div>
                   <div className="flex gap-4">
-                    <Inputform form={form } name='dateOfBirth' label="Date of Birth" placeholder='YYYY-MM-DD' />
-                    <Inputform form={form } name='ssn' label="SSN" placeholder='Example: 1234' />
+                    <Inputform form={form.control} name='dateOfBirth' label="Date of Birth" placeholder='YYYY-MM-DD' />
+                    <Inputform form={form.control} name='ssn' label="SSN" placeholder='Example: 1234' />
                   </div>
                 </>
               )}
 
-            <Inputform form={form} name="email" label="Email" placeholder="Enter your email" />
-            <Inputform form={form} name="password" label="Password" placeholder="Enter your password"/>
+            <Inputform form={form.control} name="email" label="Email" placeholder="Enter your email" />
+            <Inputform form={form.control} name="password" label="Password" placeholder="Enter your password"/>
 
         <Button type="submit" className='form-btn'>Submit</Button>
         <footer className='flex-center gap-1'>
