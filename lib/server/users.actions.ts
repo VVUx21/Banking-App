@@ -7,11 +7,34 @@ import { parseStringify } from "../utils";
 export async function getLoggedInUser() {
     try {
       const { account } = await createSessionClient();
-      return await account.get();
+      const user= await account.get();
+      return parseStringify(user);
+    } catch (error) {
+      return error;
+    }
+  }
+
+  export const logoutAccount = async () => {
+    try {
+      const { account } = await createSessionClient();
+  
+      cookies().delete('appwrite-session');//very important..
+  
+      await account.deleteSession('current');
     } catch (error) {
       return null;
     }
   }
+
+export async function signin({email,password}:signInProps) {
+  try {
+    const { account } = await createAdminClient();
+    const user = await account.createEmailPasswordSession(email,password);
+    return parseStringify(user);
+  } catch (error) {
+    console.error('Error', error);
+}
+}
 
 export async function signup({password,...userData}:SignUpParams) {
     const {email,firstName,lastName}=userData;

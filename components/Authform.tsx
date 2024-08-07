@@ -12,13 +12,14 @@ import {
 } from "@/components/ui/form"
 import Inputform from './inputform'
 import {authFormSchema} from '@/lib/utils'
-import { signup } from '@/lib/server/users.actions'
+import { signin, signup } from '@/lib/server/users.actions'
+import { useRouter } from 'next/navigation'
 
 const Authform = ({type}:{type:string}) => {
     const [user,setUser] = useState(null);
     const formSchema = authFormSchema(type);
+    const router=useRouter();
 
-    // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -26,13 +27,24 @@ const Authform = ({type}:{type:string}) => {
         password: ''
       },
     })
-  // 2. Define a submit handler.
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === 'sign-up') {
         console.log(values);
         const newUser= await signup(values);
         setUser(newUser);
+      }
+      if (type === 'sign-in') {
+        console.log(values);
+        const response= await signin(
+          {
+            email: values.email,
+            password: values.password
+          }
+        );
+        if (response)
+          router.push('/');
       } 
     } catch (error) {
       console.error('Error', error);
