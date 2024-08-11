@@ -31,25 +31,24 @@ const Authform = ({type}:{type:string}) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === 'sign-up') {
-        console.log(values);
+        //console.log(values);
         const newUser= await signup(values);
         setUser(newUser);
       }
       if (type === 'sign-in') {
         console.log(values);
-        const response= await signin(
+        const users= await signin(
           {
             email: values.email,
             password: values.password
           }
         );
-        if (response)
-          router.push('/');
+        //console.log(response);
+        if (users) router.push('/')
       } 
     } catch (error) {
       console.error('Error', error);
     }
-    //console.log(values)
   }
   return (
    <section className='auth-form'>
