@@ -36,7 +36,7 @@ const Authform = ({type}:{type:string}) => {
         setUser(newUser);
       }
       if (type === 'sign-in') {
-        console.log(values);
+        //console.log(values);
         const users= await signin(
           {
             email: values.email,
