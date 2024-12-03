@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
 import {
   Form,
 } from "@/components/ui/form"
@@ -43,12 +42,12 @@ const Authform = ({type}:{type:string}) => {
           city: values.city!,
           state: values.state!,
           postalCode: values.postalCode!,
-          dateofBirth: values.dateofBirth!,
+          dateOfBirth: values.dateofBirth!,
           ssn: values.ssn!,
           email: values.email,
           password: values.password
         }
-        console.log(values);
+        //console.log(userdata);
         const newUser= await signup(userdata);
         setUser(newUser);
       }
@@ -91,11 +90,8 @@ const Authform = ({type}:{type:string}) => {
           ):(
             <>
             <Form {...form}>
-        <form  onSubmit={(e) => {
-    e.preventDefault(); // Prevent default just for debugging
-    form.handleSubmit(onSubmit)(e); // Ensure handleSubmit is called
-  }} className="space-y-8 flex flex-col w-full">
-
+        <form  onSubmit={(e) => { e.preventDefault(); form.handleSubmit(onSubmit)(e);}}
+        className="space-y-8 flex flex-col w-full">
         {type === 'sign-up' && (
                 <>
                   <div className="flex gap-4">

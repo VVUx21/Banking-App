@@ -12,6 +12,24 @@ const {
   APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
   APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
 } = process.env;
+interface DwollaError {
+  message: string;
+  path?: string;
+  code?: string;
+}
+
+interface EmbeddedErrors {
+  errors: DwollaError[];
+}
+
+interface DwollaResponseError {
+  response: {
+    body?: {
+      _embedded?: EmbeddedErrors;
+    };
+  };
+}
+
 export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
@@ -64,9 +82,9 @@ export async function signup({password,...userData}:SignUpParams) {//atomic func
         // add user to the bank collection
       const dwollaCustomerUrl = await createDwollaCustomer({
         ...userData, //typescript complains about the optional firstname parameter because it is required
-        type: 'personal'
+        type: "personal"
       })
-      console.log(dwollaCustomerUrl)
+      //console.log(dwollaCustomerUrl)
       if (!dwollaCustomerUrl){
         throw new Error('Failed to create dwolla customer');
       }
@@ -96,7 +114,26 @@ export async function signup({password,...userData}:SignUpParams) {//atomic func
         
         return parseStringify(newuser);//in next js we cant pass large objects just like that through Server actions
     } catch (error) {
-        console.error('Error', error);
+      const typedError = error as DwollaResponseError;
+      //console.log(typedError);
+      // if (
+      //   typedError.response &&
+      //   typedError.response.body &&
+      //   typedError.response.body._embedded
+      // ) {
+      //   console.error(
+      //     'Validation Errors:',
+      //     typedError.response.body._embedded.errors
+      //   );
+  
+      //   const errors = typedError.response.body._embedded.errors
+      //     .map((err) => err.message)
+      //     .join(', ');
+      //   throw new Error(`Failed to create customer: ${errors}`);
+      // } else {
+      //   console.error('Unexpected Error:', error);
+      //   throw new Error('Something went wrong. Please try again later.');
+      // }
     }
   }
 
