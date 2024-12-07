@@ -21,7 +21,7 @@ const Totalbalance = (
         </div>
         </div>
     </div>
-  )
+)
 }
 
 export default Totalbalance

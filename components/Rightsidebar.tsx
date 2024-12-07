@@ -10,10 +10,10 @@ const Rightsidebar = ({user,transactions,banks}:RightSidebarProps) => {
             <div className="profile-banner"></div>
             <div className="profile">
                 <div className="profile-img">
-                    <span className='text-5xl'>{user?.name[0]}</span>
+                    <span className='text-5xl'>{user?.firstName[0]}</span>
                 </div>
                 <div className="profile-details">
-                    <h1 className='profile-name'>{user?.name}</h1>
+                    <h1 className='profile-name'>{user?.firstName} {user?.lastName}</h1>
                     <p className='profile-email'>{user?.email}</p>
                 </div>
             </div>
@@ -26,19 +26,19 @@ const Rightsidebar = ({user,transactions,banks}:RightSidebarProps) => {
             {banks.length>0 && (
                 <div className='flex flex-col items-center justify-center flex-1 gap-5 '>
                     <div className="relative z-10">
-                          <Bankcards 
-                          key={banks[0].$id}
-                          account={banks[0]}
-                          userName={`${user?.name}`}
-                          showBalance={false}
+                        <Bankcards 
+                        key={banks[0].$id}
+                        account={banks[0]}
+                        userName={`${user?.firstName} ${user?.lastName}`}
+                        showBalance={false}
                         />
                     </div>
                     {banks[1] && (
                         <div className="relative left-8 -top-44 z-0 w-[90%]">
-                              <Bankcards 
+                            <Bankcards 
                                 key={banks[0].$id}
                                 account={banks[0]}
-                                userName={`${user?.name}`}
+                                userName={`${user?.firstName} ${user?.lastName}`}
                                 showBalance={false}
                                 />
                         </div>
@@ -69,7 +69,7 @@ const Rightsidebar = ({user,transactions,banks}:RightSidebarProps) => {
             </div>
         </section>
     </aside>
-  )
+)
 }
 
 export default Rightsidebar

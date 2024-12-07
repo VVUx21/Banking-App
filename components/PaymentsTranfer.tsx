@@ -23,7 +23,7 @@ const formSchema = z.object({
   name: z.string().min(4, "Transfer note is too short"),
   amount: z.string().min(4, "Amount is too short"),
   senderBank: z.string().min(4, "Please select a valid bank account"),
-  sharableId: z.string().min(8, "Please select a valid sharable Id"),
+  shareableId: z.string().min(8, "Please select a valid sharable Id"),
 });
 
 const PaymentsTranfer = () => {
@@ -35,7 +35,7 @@ const PaymentsTranfer = () => {
       email: "",
       amount: "",
       senderBank: "",
-      sharableId: "",
+      shareableId: "",
     },
   });
 
@@ -122,7 +122,7 @@ const PaymentsTranfer = () => {
 
           <Inputform2
           form={form}
-          name="sharableId"
+          name="shareableId"
           label="Receiver&apos;s Plaid Sharable Id"
           placeholder="Enter the public account number"
           />
