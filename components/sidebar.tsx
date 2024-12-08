@@ -7,12 +7,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import Footer from './Footer'
+import PlaidLink from './PlaidLink'
 
 const Sidebar = ({user}:SiderbarProps) => {
     const Pathname = usePathname();
-  return (
+return (
     <section className='sidebar'>
-       <nav className='sidebar-profile flex flex-col gap-4'>
+    <nav className='sidebar-profile flex flex-col gap-4'>
             <Link href="/" className='flex items-center mb-12 gap-2'>
                 <Image src="/icons/logo.svg" alt='logo' width={34} height={34}/>
                 <h1 className='sidebar-logo'>Paytrack</h1>
@@ -30,10 +31,11 @@ const Sidebar = ({user}:SiderbarProps) => {
                     )
                 })
             }
-       </nav>
-      <Footer user={user} type={'desktop'}/>
+        <PlaidLink user={user} />
+    </nav>
+    <Footer user={user} type={'desktop'}/>
     </section>
-  )
+)
 }
 
 export default Sidebar
