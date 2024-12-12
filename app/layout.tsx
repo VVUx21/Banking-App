@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic' //important for dynamic loading mode
+
 import type { Metadata } from "next";
 import { Inter,IBM_Plex_Serif } from "next/font/google";
 import "./globals.css";
