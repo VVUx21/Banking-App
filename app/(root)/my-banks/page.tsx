@@ -1,9 +1,14 @@
+import Bankcards from '@/components/Bankcards';
 import Headerbox from '@/components/headerbox'
-import Mybankscard from '@/components/mybankscard'
+import { getAccounts } from '@/lib/server/bank.actions';
+import { getLoggedInUser } from '@/lib/server/users.actions';
 import React from 'react'
 
-const Bankacc = () => {
-
+const Bankacc = async () => {
+  const loggedIn = await getLoggedInUser();
+  const accounts = await getAccounts({ 
+    userId: loggedIn.$id 
+  })
   return (
     <section className=''>
         <header className='banks'>
@@ -13,15 +18,18 @@ const Bankacc = () => {
           />
         </header>
 
-        <div className="cards px-4 flex flex-col gap-1">
-          <h2 className='header-2'>Your cards</h2>
-          <div className="flex flex-wrap gap-8 py-6">
-          <Mybankscard/>
-          <Mybankscard/>
-          <Mybankscard/>
-          <Mybankscard/>
-          <Mybankscard/>
-          <Mybankscard/>
+        <div className="space-y-4">
+          <h2 className="header-2">
+            Your cards
+          </h2>
+          <div className="flex flex-wrap gap-6">
+            {accounts && accounts.data.map((a: Account) => (
+              <Bankcards
+                key={accounts.id}
+                account={a}
+                userName={loggedIn?.firstName}
+              />
+            ))}
           </div>
         </div>
     </section>

@@ -33,7 +33,7 @@ declare type User = {
   dwollaCustomerId: string;
   firstName: string;
   lastName: string;
-  name:string;
+  name: string;
   address1: string;
   city: string;
   state: string;
@@ -196,7 +196,6 @@ declare interface BankDropdownProps {
   accounts: Account[];
   setValue?: UseFormSetValue<any>;
   otherStyles?: string;
-  value:string;
 }
 
 declare interface BankTabItemProps {
@@ -212,7 +211,7 @@ declare interface TotlaBalanceBoxProps {
 
 declare interface FooterProps {
   user: User;
-  type:'mobile' |'desktop';
+  type: "mobile" | "desktop";
 }
 
 declare interface RightSidebarProps {

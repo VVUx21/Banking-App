@@ -17,6 +17,12 @@ import {
 } from "./ui/form";
 import { Textarea } from "./ui/textarea";
 import Inputform2 from "./inputform2";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createTransfer } from "@/lib/server/dwolla.actions";
+import { createTransaction } from "@/lib/server/transaction.actions";
+import { getBank, getBankByAccountId } from "@/lib/server/users.actions";
+import { decryptId } from "@/lib/utils";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -26,8 +32,9 @@ const formSchema = z.object({
   shareableId: z.string().min(8, "Please select a valid sharable Id"),
 });
 
-const PaymentsTranfer = () => {
-
+const PaymentsTranfer = ({ accounts }: PaymentTransferFormProps) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,13 +46,53 @@ const PaymentsTranfer = () => {
     },
   });
 
-  const submit = (data: z.infer<typeof formSchema>) => {
-    console.log(data)
+  const submit = async (data: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+
+    try {
+      const receiverAccountId = decryptId(data.shareableId);
+      const receiverBank = await getBankByAccountId({
+        accountId: receiverAccountId,
+      });
+      const senderBank = await getBank({ documentId: data.senderBank });
+
+      const transferParams = {
+        sourceFundingSourceUrl: senderBank.fundingSourceUrl,
+        destinationFundingSourceUrl: receiverBank.fundingSourceUrl,
+        amount: data.amount,
+      };
+      // create transfer
+      const transfer = await createTransfer(transferParams);
+
+      // create transfer transaction
+      if (transfer) {
+        const transaction = {
+          name: data.name,
+          amount: data.amount,
+          senderId: senderBank.userId.$id,
+          senderBankId: senderBank.$id,
+          receiverId: receiverBank.userId.$id,
+          receiverBankId: receiverBank.$id,
+          email: data.email,
+        };
+
+        const newTransaction = await createTransaction(transaction);
+
+        if (newTransaction) {
+          form.reset();
+          router.push("/");
+        }
+      }
+    } catch (error) {
+      console.error("Submitting create transfer request failed: ", error);
+    }
+
+    setIsLoading(false);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(submit)} className="flex flex-col">
+      <form onSubmit={(e) => { e.preventDefault(); form.handleSubmit(submit)(e);}} className="flex flex-col">
         <FormField
           control={form.control}
           name="senderBank"
@@ -63,9 +110,9 @@ const PaymentsTranfer = () => {
                 <div className="flex w-full flex-col">
                   <FormControl>
                     <BankDropdown
-                      // accounts={accounts}
-                      // setValue={form.setValue}
-                      otherStyles="!w-full" accounts={[]}/>
+                      accounts={accounts}
+                      setValue={form.setValue}
+                      otherStyles="!w-full"/>
                   </FormControl>
                   <FormMessage className="text-12 text-red-500" />
                 </div>

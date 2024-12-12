@@ -1,8 +1,17 @@
 import Headerbox from '@/components/headerbox'
 import PaymentsTranfer from '@/components/PaymentsTranfer'
+import { getAccounts } from '@/lib/server/bank.actions';
+import { getLoggedInUser } from '@/lib/server/users.actions';
 import React from 'react'
 
-const Paymenttrans = () => {
+const Paymenttrans = async () => {
+  const loggedIn = await getLoggedInUser();
+  const accounts = await getAccounts({ 
+    userId: loggedIn.$id 
+  })
+  if(!accounts) return;
+  
+  const accountsData = accounts?.data;
   return (
     <section className='payment-transfer'>
         <Headerbox
@@ -14,7 +23,9 @@ const Paymenttrans = () => {
             <p className='text-16 text-black-1 font-normal'>Enter the details of recipient</p>
         </div>
         <section className='w-full pt-5'>
-            <PaymentsTranfer/>
+            <PaymentsTranfer
+              accounts={accountsData}
+            />
         </section>
     </section>
   )

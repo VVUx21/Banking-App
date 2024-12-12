@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Select,
     SelectContent,
@@ -11,55 +11,75 @@ import {
     SelectLabel,
     SelectTrigger,
   } from "@/components/ui/select";
+import { formatAmount, formUrlQuery } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const BankDropdown = ({
-    // accounts = [],
-    // setValue,
+    accounts = [],
+    setValue,
     otherStyles
   }: BankDropdownProps) => {
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [selected, setSeclected] = useState(accounts[0]);
+
+  const handleBankChange = (id: string) => {
+    const account = accounts.find((account) => account.appwriteItemId === id)!;
+
+    setSeclected(account);
+    const newUrl = formUrlQuery({
+      params: searchParams.toString(),
+      key: "id",
+      value: id,
+    });
+    router.push(newUrl);
+
+    if (setValue) {
+      setValue("senderBank", id);
+    }
+  };
+
   return (
     <>
-    <Select>
-      <SelectTrigger className={`flex flex-row gap-2 bg-white md:w-[300px] ${otherStyles}`}>
-      <Image
+    <Select
+      defaultValue={selected.id}
+      onValueChange={(value) => handleBankChange(value)}
+    >
+      <SelectTrigger
+        className={`flex w-full bg-white gap-3 md:w-[300px] ${otherStyles}`}
+      >
+        <Image
           src="icons/credit-card.svg"
           width={20}
           height={20}
           alt="account"
         />
-        <p className="text-16 w-full text-left">Select Account</p>
+        <p className="line-clamp-1 w-full text-left">{selected.name}</p>
       </SelectTrigger>
-      <SelectContent className={`w-full bg-white md:w-[300px] ${otherStyles}`}
+      <SelectContent
+        className={`w-full bg-white md:w-[300px] ${otherStyles}`}
         align="end"
       >
         <SelectGroup>
           <SelectLabel className="py-2 font-normal text-gray-500">
-                Select a bank to display
+            Select a bank to display
           </SelectLabel>
-          <SelectItem value="Bank of America" className="cursor-pointer border-t" >
-          <div className="flex flex-col ">
-                <p className="text-16 font-medium">Bank of America</p>
+          {accounts.map((account: Account) => (
+            <SelectItem
+              key={account.id}
+              value={account.appwriteItemId}
+              className="cursor-pointer border-t"
+            >
+              <div className="flex flex-col ">
+                <p className="text-16 font-medium">{account.name}</p>
                 <p className="text-14 font-medium text-blue-600">
-                    &#36;2,840.80
+                  {formatAmount(account.currentBalance)}
                 </p>
               </div>
-          </SelectItem>
-          <SelectItem value="Chase Growth Savings Account" className="cursor-pointer border-t" >
-          <div className="flex flex-col ">
-                <p className="text-16 font-medium">Chase Growth Savings Account</p>
-                <p className="text-14 font-medium text-blue-600">
-                    &#36;2,840.80
-                </p>
-              </div>
-          </SelectItem>
-          <SelectItem value="First Platypus Bank" className="cursor-pointer border-t" >
-          <div className="flex flex-col ">
-                <p className="text-16 font-medium">First Platypus Bank</p>
-                <p className="text-14 font-medium text-blue-600">
-                    &#36;2,840.80
-                </p>
-              </div>
-          </SelectItem>
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>

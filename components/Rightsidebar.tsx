@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import React from 'react'
 import Bankcards from './Bankcards'
-import { Category } from './Category'
+import Category  from './Category'
+import { countTransactionCategories } from '@/lib/utils'
 
 const Rightsidebar = ({user,transactions,banks}:RightSidebarProps) => {
-  return (
+    const categories: CategoryCount[] = countTransactionCategories(transactions);
+return (
     <aside className='right-sidebar'>
         <section className=' flex flex-col pb-8'>
             <div className="profile-banner"></div>
@@ -48,24 +50,11 @@ const Rightsidebar = ({user,transactions,banks}:RightSidebarProps) => {
             )}
             <div className="flex flex-col flex-1 -mt-36 gap-6">
                 <h2 className='header-2'>My budgets</h2>
-                <Category name="Subscriptions" 
-                    icon="/icons/monitor.svg"
-                    count={0}
-                    bgcolor="bg-bankGradient/10"
-                    progressbar="bg-bankGradient"
-                />
-                <Category name="Food and booze" 
-                    icon="/icons/shopping-bag.svg"
-                    count={70}
-                    bgcolor="bg-red-900/10"
-                    progressbar="bg-red-300"
-                />
-                <Category name="Savings" 
-                    icon="/icons/coins.svg"
-                    count={70}
-                    bgcolor="bg-green-900/10"
-                    progressbar="bg-green-300"
-                />
+                <div className='space-y-5'>
+                    {categories.map((category, index) => (
+                    <Category key={category.name} category={category} />
+                    ))}
+                </div>
             </div>
         </section>
     </aside>
